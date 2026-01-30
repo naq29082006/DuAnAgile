@@ -2,15 +2,13 @@
 
     <string name="app_name">AppNamKC</string>
     <string name="app_title">FastFood App</string>
-    <string name="register_title">Đăng Ký</string>
+    <string name="register_title">Đăng Ký Tài Khoản</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Mật khẩu</string>
     <string name="hint_confirm_password">Xác nhận mật khẩu</string>
-    <string name="btn_register">Đăng ký</string>
+    <string name="btn_register">Đăng Ký</string>
     <string name="have_account">Đã có tài khoản?</string>
     <string name="login_now">Đăng nhập ngay</string>
-
-    <string name="app_name">NamKc</string>
 
     <string name="login_title">Đăng Nhập</string>
     <string name="login_email">Email</string>

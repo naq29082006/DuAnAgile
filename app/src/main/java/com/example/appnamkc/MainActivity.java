@@ -9,7 +9,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class MainActivity extends AppCompatActivity {
+
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +26,18 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        findViewById(R.id.tv_register).setOnClickListener(v ->
-                startActivity(new Intent(this, RegisterActivity.class)));
+        try {
+            mAuth = FirebaseAuth.getInstance();
+
+            // Kiểm tra nếu chưa đăng nhập thì chuyển đến LoginActivity
+            if (mAuth.getCurrentUser() == null) {
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+            }
+        } catch (Exception e) {
+            // Nếu có lỗi với Firebase, vẫn chuyển đến LoginActivity
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
     }
 }

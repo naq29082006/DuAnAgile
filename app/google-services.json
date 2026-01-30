@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "816223793164",
+    "project_id": "agile-cea45",
+    "storage_bucket": "agile-cea45.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:816223793164:android:54d2e5198ed0c14bfbbe29",
+        "android_client_info": {
+          "package_name": "com.example.appnamkc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5V4Wm0CoVSgXwpLoEJncd1ZfcrrDrwmU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
