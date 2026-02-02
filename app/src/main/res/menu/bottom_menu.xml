@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_category"
+        android:title="Danh mục"
+        android:icon="@drawable/ic_category"/>
+
+    <item
+        android:id="@+id/nav_product"
+        android:title="Sản phẩm"
+        android:icon="@drawable/ic_product"/>
+
+    <item
+        android:id="@+id/nav_trash"
+        android:title="Thùng rác"
+        android:icon="@drawable/ic_trash"/>
+
+</menu>

@@ -1,4 +1,4 @@
-package com.example.appnamkc;
+package com.example.appnamkc.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.appnamkc.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -77,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 if (task.isSuccessful()) {
                                     Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                    startActivity(new Intent(LoginActivity.this, CategoryActivity.class));
                                     finish();
                                 } else {
                                     String errorMessage = "Đăng nhập thất bại";
