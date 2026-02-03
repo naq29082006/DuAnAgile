@@ -83,45 +83,45 @@ public class RegisterActivity extends AppCompatActivity {
         findViewById(R.id.btn_register).setEnabled(false);
         findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
 
-        try {
-            mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(Task<AuthResult> task) {
-                            try {
-                                findViewById(R.id.progress_bar).setVisibility(View.GONE);
-                                findViewById(R.id.btn_register).setEnabled(true);
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(Task<AuthResult> task) {
+                        findViewById(R.id.progress_bar).setVisibility(View.GONE);
+                        findViewById(R.id.btn_register).setEnabled(true);
 
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                                    finish();
-                                } else {
-                                    String errorMessage = "Đăng ký thất bại";
-                                    if (task.getException() != null) {
-                                        String exceptionMsg = task.getException().getMessage();
-                                        if (exceptionMsg != null) {
-                                            if (exceptionMsg.contains("email-already-in-use")) {
-                                                errorMessage = "Email này đã được sử dụng";
-                                            } else if (exceptionMsg.contains("weak-password")) {
-                                                errorMessage = "Mật khẩu quá yếu";
-                                            } else {
-                                                errorMessage += ": " + exceptionMsg;
-                                            }
-                                        }
+                        if (task.isSuccessful()) {
+                            Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            String errorMessage = "Đăng ký thất bại";
+                            if (task.getException() != null) {
+                                String exceptionMsg = task.getException().getMessage();
+                                if (exceptionMsg != null) {
+                                    if (exceptionMsg.contains("email-already-in-use")) {
+                                        errorMessage = "Email này đã được sử dụng";
+                                    } else if (exceptionMsg.contains("weak-password")) {
+                                        errorMessage = "Mật khẩu quá yếu";
+                                    } else if (exceptionMsg.contains("network")) {
+                                        errorMessage = "Lỗi kết nối mạng. Vui lòng thử lại";
+                                    } else {
+                                        errorMessage += ": " + exceptionMsg;
                                     }
-                                    Toast.makeText(RegisterActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                                 }
-                            } catch (Exception e) {
-                                Toast.makeText(RegisterActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
+                            Toast.makeText(RegisterActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                         }
-                    });
-        } catch (Exception e) {
-            findViewById(R.id.progress_bar).setVisibility(View.GONE);
-            findViewById(R.id.btn_register).setEnabled(true);
-            Toast.makeText(this, "Lỗi kết nối: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    findViewById(R.id.progress_bar).setVisibility(View.GONE);
+                    findViewById(R.id.btn_register).setEnabled(true);
+                    String msg = "Lỗi đăng ký: " + (e.getMessage() != null ? e.getMessage() : "Vui lòng thử lại");
+                    Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_SHORT).show();
+                });
     }
 }
 

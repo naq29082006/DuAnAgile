@@ -41,6 +41,9 @@ dependencies {
     // CardView
     implementation("androidx.cardview:cardview:1.0.0")
     
+    // RecyclerView
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
     implementation("com.google.firebase:firebase-auth")

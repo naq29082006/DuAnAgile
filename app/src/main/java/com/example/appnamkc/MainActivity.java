@@ -10,10 +10,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.example.appnamkc.ui.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
-
-    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         try {
-            mAuth = FirebaseAuth.getInstance();
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
             // Kiểm tra nếu chưa đăng nhập thì chuyển đến LoginActivity
             if (mAuth.getCurrentUser() == null) {

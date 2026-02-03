@@ -17,6 +17,14 @@
             android:name=".ui.CategoryActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.HomeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppNamKC" />
+        <activity
+            android:name=".ui.ProductDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppNamKC" />
+        <activity
             android:name=".ui.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.AppNamKC">
@@ -35,7 +43,7 @@
             android:exported="false"
             android:theme="@style/Theme.AppNamKC" />
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".MainActivity"
             android:exported="false"
             android:theme="@style/Theme.AppNamKC" />
     </application>

@@ -19,7 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE category (" +
+        db.execSQL("CREATE TABLE IF NOT EXISTS category (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "name TEXT," +
                 "is_deleted INTEGER DEFAULT 0)");
@@ -31,29 +31,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
 
-    // Lấy danh mục chưa bị xóa
+    // ✅ LẤY DANH MỤC – KHÔNG TREO
     public ArrayList<Category> getCategories(String keyword, String sort) {
+
+        // fix sort tránh SQL lỗi
+        if (!"ASC".equalsIgnoreCase(sort) && !"DESC".equalsIgnoreCase(sort)) {
+            sort = "ASC";
+        }
+
         ArrayList<Category> list = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
 
-        String sql = "SELECT * FROM category " +
-                "WHERE is_deleted=0 AND name LIKE ? " +
-                "ORDER BY name " + sort;
+        Cursor c = db.rawQuery(
+                "SELECT * FROM category WHERE is_deleted=0 AND name LIKE ? ORDER BY name " + sort,
+                new String[]{"%" + keyword + "%"}
+        );
 
-        Cursor c = db.rawQuery(sql, new String[]{"%" + keyword + "%"});
-
-        while (c.moveToNext()) {
-            list.add(new Category(
-                    c.getInt(0),
-                    c.getString(1),
-                    c.getInt(2)
-            ));
+        if (c != null) {
+            while (c.moveToNext()) {
+                list.add(new Category(
+                        c.getInt(0),
+                        c.getString(1),
+                        c.getInt(2)
+                ));
+            }
+            c.close();
         }
-        c.close();
+
         return list;
     }
 
-    // Xóa mềm
+    // XÓA MỀM
     public void deleteCategory(int id) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues cv = new ContentValues();
