@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - App Bán Đồ Ăn Nhanh</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <i class="fas fa-shield-halved"></i>
+      <span>Admin Panel</span>
+    </div>
+    <div class="header-right">
+      <i class="fas fa-user-circle"></i>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- Dashboard -->
+    <section id="page-dashboard" class="page active">
+      <div class="page-title">
+        <h1>Dashboard</h1>
+        <p>Tổng quan hệ thống</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card stat-products">
+          <i class="fas fa-box"></i>
+          <span class="stat-value" id="stat-products">0</span>
+          <span class="stat-label">Sản phẩm</span>
+        </div>
+        <div class="stat-card stat-categories">
+          <i class="fas fa-tag"></i>
+          <span class="stat-value" id="stat-categories">0</span>
+          <span class="stat-label">Danh mục</span>
+        </div>
+        <div class="stat-card stat-users">
+          <i class="fas fa-users"></i>
+          <span class="stat-value" id="stat-users">0</span>
+          <span class="stat-label">Người dùng</span>
+        </div>
+      </div>
+
+      <div class="section-title">
+        <i class="fas fa-bolt"></i>
+        <span>Thao tác nhanh</span>
+      </div>
+      <div class="quick-actions">
+        <button class="quick-btn" data-nav="products"><i class="fas fa-box"></i><span>Sản phẩm</span></button>
+        <button class="quick-btn" data-nav="categories"><i class="fas fa-tag"></i><span>Danh mục</span></button>
+        <button class="quick-btn" data-nav="users"><i class="fas fa-users"></i><span>Người dùng</span></button>
+      </div>
+    </section>
+
+    <!-- Products -->
+    <section id="page-products" class="page">
+      <div class="page-title">
+        <h1>Sản phẩm</h1>
+        <p>Quản lý tất cả sản phẩm</p>
+      </div>
+      <div class="products-toolbar">
+        <div class="tab-list" role="tablist">
+          <button type="button" class="tab-btn active" data-product-tab="list" aria-selected="true">Danh sách</button>
+          <button type="button" class="tab-btn" data-product-tab="trash" aria-selected="false">Thùng rác</button>
+        </div>
+        <div class="search-wrap">
+          <i class="fas fa-search"></i>
+          <input type="text" id="product-search" placeholder="Tìm kiếm sản phẩm..." />
+        </div>
+        <select id="product-category-filter">
+          <option value="">Tất cả</option>
+        </select>
+      </div>
+      <div id="products-grid" class="products-grid"></div>
+      <!-- Nút thêm sản phẩm (FAB) - chỉ hiện khi ở trang Sản phẩm -->
+      <button type="button" class="fab fab-add-product" id="product-fab" title="Thêm sản phẩm" aria-label="Thêm sản phẩm">
+        <span class="fab-icon">+</span>
+      </button>
+    </section>
+
+    <!-- Modal Thêm/Sửa sản phẩm -->
+    <div id="product-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="product-modal-title">Thêm sản phẩm</h2>
+          <button type="button" class="modal-close" aria-label="Đóng">&times;</button>
+        </div>
+        <form id="product-form">
+          <input type="hidden" id="product-id" />
+          <div class="form-group">
+            <label for="product-name">Tên sản phẩm</label>
+            <input type="text" id="product-name" required placeholder="VD: Burger Gà Giòn" />
+          </div>
+          <div class="form-group">
+            <label for="product-description">Mô tả</label>
+            <textarea id="product-description" rows="3" placeholder="Mô tả ngắn..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="product-price">Giá (₫)</label>
+            <input type="number" id="product-price" min="0" step="1000" required placeholder="45000" />
+          </div>
+          <div class="form-group">
+            <label for="product-category">Danh mục</label>
+            <select id="product-category">
+              <option value="">-- Chọn danh mục --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="product-imageUrl">URL hình ảnh (tùy chọn)</label>
+            <input type="text" id="product-imageUrl" placeholder="https://..." />
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-cancel">Hủy</button>
+            <button type="submit" class="btn-save">Lưu</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Categories -->
+    <section id="page-categories" class="page">
+      <div class="page-title">
+        <h1>Danh mục</h1>
+        <p>Quản lý danh mục sản phẩm</p>
+      </div>
+      <div class="categories-toolbar">
+        <button type="button" class="btn-add-category" id="btn-add-category">
+          <i class="fas fa-plus"></i> Thêm danh mục
+        </button>
+        <button type="button" class="btn-trash-category" id="btn-open-trash-modal">
+          <i class="fas fa-trash"></i> Thùng rác
+        </button>
+      </div>
+      <div id="categories-grid" class="categories-grid"></div>
+      <button type="button" class="fab fab-add-category" id="category-fab" title="Thêm danh mục" aria-label="Thêm danh mục">
+        <span class="fab-icon">+</span>
+      </button>
+    </section>
+
+    <!-- Modal Thêm/Sửa danh mục -->
+    <div id="category-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="category-modal-title">Thêm danh mục</h2>
+          <button type="button" class="modal-close" aria-label="Đóng">&times;</button>
+        </div>
+        <form id="category-form">
+          <input type="hidden" id="category-id" />
+          <div class="form-group">
+            <label for="category-name">Tên danh mục</label>
+            <input type="text" id="category-name" required placeholder="VD: Burger" />
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-cancel">Hủy</button>
+            <button type="submit" class="btn-save">Lưu</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal Thùng rác danh mục -->
+    <div id="category-delete-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2><i class="fas fa-trash"></i> Thùng rác - Danh mục</h2>
+          <button type="button" class="modal-close" aria-label="Đóng">&times;</button>
+        </div>
+        <p class="modal-warning">Danh mục đã xóa (xóa mềm). Khôi phục hoặc xóa vĩnh viễn. Xóa vĩnh viễn chỉ được khi danh mục không còn sản phẩm.</p>
+        <div id="category-delete-list" class="category-delete-list"></div>
+      </div>
+    </div>
+
+    <!-- Users -->
+    <section id="page-users" class="page">
+      <div class="page-title">
+        <h1>Người dùng</h1>
+        <p>Quản lý người dùng</p>
+      </div>
+      <div class="users-toolbar">
+        <div class="tab-list" role="tablist">
+          <button type="button" class="tab-btn active" data-users-tab="list" aria-selected="true">Danh sách</button>
+          <button type="button" class="tab-btn" data-users-tab="trash" aria-selected="false">Thùng rác</button>
+        </div>
+      </div>
+      <div id="users-list" class="users-grid"></div>
+    </section>
+  </main>
+
+  <!-- Modal Chi tiết người dùng -->
+  <div id="user-detail-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-user"></i> Chi tiết người dùng</h2>
+        <button type="button" class="modal-close" aria-label="Đóng">&times;</button>
+      </div>
+      <div id="user-detail-body" class="user-detail-body"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel modal-close-btn">Đóng</button>
+        <button type="button" class="btn-delete-user-detail" id="btn-delete-from-detail">Xóa tài khoản</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Xóa người dùng (chọn lý do vi phạm) -->
+  <div id="user-delete-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-user-slash"></i> Xóa tài khoản</h2>
+        <button type="button" class="modal-close" aria-label="Đóng">&times;</button>
+      </div>
+      <p class="modal-warning">Chọn lý do vi phạm, sau đó chọn xóa mềm (vào thùng rác) hoặc xóa vĩnh viễn.</p>
+      <div class="form-group">
+        <label>Lý do vi phạm</label>
+        <div id="user-delete-reasons" class="user-delete-reasons"></div>
+        <input type="text" id="user-delete-reason-other" placeholder="Lý do khác (tùy chọn)" class="form-control" />
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel modal-close-btn">Hủy</button>
+        <button type="button" class="btn-delete-soft" id="btn-user-delete-soft">Xóa (chuyển vào thùng rác)</button>
+        <button type="button" class="btn-delete-permanent" id="btn-user-delete-permanent">Xóa vĩnh viễn</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-nav="dashboard">
+      <i class="fas fa-house"></i>
+      <span>Tổng quan</span>
+    </button>
+    <button class="nav-item" data-nav="products">
+      <i class="fas fa-box"></i>
+      <span>Sản phẩm</span>
+    </button>
+    <button class="nav-item" data-nav="categories">
+      <i class="fas fa-tag"></i>
+      <span>Danh mục</span>
+    </button>
+    <button class="nav-item" data-nav="users">
+      <i class="fas fa-users"></i>
+      <span>Người dùng</span>
+    </button>
+  </nav>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
