@@ -1,7 +1,7 @@
 const express = require('express');
 
 /**
- * Routes API người dùng: GET/PUT/DELETE /api/users
+ * Routes API người dùng: CRUD, xóa mềm/cứng, lý do vi phạm, thùng rác
  * @param {object} data - { users }
  * @param {function} persist - Hàm lưu dữ liệu ra file
  */
