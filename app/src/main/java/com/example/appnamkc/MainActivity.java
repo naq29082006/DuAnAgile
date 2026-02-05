@@ -28,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
         try {
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
