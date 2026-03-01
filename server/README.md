@@ -1,8 +1,6 @@
-# API + Admin Web - App Bán Đồ Ăn Nhanh
+# Backend API & Admin Panel
 
-Backend API và giao diện admin đã gộp chung trong folder **server**: API ở root, giao diện ở `public/`.
-
-## Cài đặt & chạy
+## Chạy server
 
 ```bash
 cd server
@@ -10,32 +8,13 @@ npm install
 npm start
 ```
 
-- **Admin (giao diện quản lý):** http://localhost:3000  
-- **API:** http://localhost:3000/api/...
+Server chạy tại **http://localhost:3000**
 
-Một lệnh `npm start` chạy cả API và trang admin.
+- **Admin Panel:** http://localhost:3000 (mở trực tiếp trong trình duyệt)
+- **API:** http://localhost:3000/api/products, /api/categories, /api/users
 
-## API
+## Lưu ý
 
-| Method | URL | Mô tả |
-|--------|-----|--------|
-| GET | /api/products | Danh sách sản phẩm |
-| GET | /api/products?search=...&category=... | Tìm kiếm / lọc theo danh mục |
-| GET | /api/products/:id | Chi tiết một sản phẩm |
-| POST | /api/products | Thêm sản phẩm (body: name, description, price, category, imageUrl) |
-| PUT | /api/products/:id | Sửa sản phẩm |
-| DELETE | /api/products/:id | Xóa sản phẩm |
-| GET | /api/categories | Danh sách danh mục |
-| GET | /api/categories?withCount=1 | Danh mục kèm số sản phẩm |
-| GET | /api/categories/:id | Chi tiết 1 danh mục |
-| POST | /api/categories | Thêm danh mục (body: name) |
-| PUT | /api/categories/:id | Sửa danh mục (name, isDeleted) |
-| DELETE | /api/categories/:id | Xóa (chỉ khi danh mục không còn sản phẩm) |
-| GET | /api/users | Danh sách người dùng |
-| GET | /api/orders | Danh sách đơn hàng |
-| GET | /api/orders?status=pending | Đơn chờ duyệt |
-| PATCH | /api/orders/:id | Cập nhật đơn (body: `{ "status": "approved" }`) |
-
-## Dữ liệu
-
-Dữ liệu mẫu nằm trong `data.js`. Có thể thay bằng database (SQLite, MongoDB, ...) sau.
+- Nếu cổng 3000 bị chiếm, đặt biến môi trường: `PORT=3001 npm start`
+- Để truy cập từ thiết bị khác trong mạng: server tự bind `0.0.0.0`, dùng IP máy (vd: http://192.168.1.100:3000)
+- App Android (emulator) kết nối qua `10.0.2.2:3000`; thiết bị thật cần đổi `ApiConfig.BASE_URL` thành IP máy chạy server

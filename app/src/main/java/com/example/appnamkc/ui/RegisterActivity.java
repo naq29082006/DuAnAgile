@@ -9,32 +9,23 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.appnamkc.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.appnamkc.api.ApiClient;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private TextInputEditText etEmail, etPassword, etConfirmPassword;
-    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        mAuth = FirebaseAuth.getInstance();
-
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
         etConfirmPassword = findViewById(R.id.et_confirm_password);
 
-        // Đăng ký
         findViewById(R.id.btn_register).setOnClickListener(v -> registerUser());
-
-        // Chuyển đến đăng nhập
         findViewById(R.id.tv_login_link).setOnClickListener(v ->
                 startActivity(new Intent(this, LoginActivity.class)));
     }
@@ -49,31 +40,21 @@ public class RegisterActivity extends AppCompatActivity {
             etEmail.requestFocus();
             return;
         }
-
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             etEmail.setError("Email không hợp lệ");
             etEmail.requestFocus();
             return;
         }
-
         if (TextUtils.isEmpty(password)) {
             etPassword.setError("Vui lòng nhập mật khẩu");
             etPassword.requestFocus();
             return;
         }
-
         if (password.length() < 6) {
-            etPassword.setError("Mật khẩu phải có ít nhất 6 ký tự");
+            etPassword.setError("Mật khẩu tối thiểu 6 ký tự");
             etPassword.requestFocus();
             return;
         }
-
-        if (TextUtils.isEmpty(confirmPassword)) {
-            etConfirmPassword.setError("Vui lòng xác nhận mật khẩu");
-            etConfirmPassword.requestFocus();
-            return;
-        }
-
         if (!password.equals(confirmPassword)) {
             etConfirmPassword.setError("Mật khẩu không khớp");
             etConfirmPassword.requestFocus();
@@ -83,45 +64,22 @@ public class RegisterActivity extends AppCompatActivity {
         findViewById(R.id.btn_register).setEnabled(false);
         findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
 
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(Task<AuthResult> task) {
-                        findViewById(R.id.progress_bar).setVisibility(View.GONE);
-                        findViewById(R.id.btn_register).setEnabled(true);
+        ApiClient.register(email, password, new ApiClient.ApiCallback<ApiClient.ApiUser>() {
+            @Override
+            public void onSuccess(ApiClient.ApiUser user) {
+                findViewById(R.id.progress_bar).setVisibility(View.GONE);
+                findViewById(R.id.btn_register).setEnabled(true);
+                Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                finish();
+            }
 
-                        if (task.isSuccessful()) {
-                            Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            String errorMessage = "Đăng ký thất bại";
-                            if (task.getException() != null) {
-                                String exceptionMsg = task.getException().getMessage();
-                                if (exceptionMsg != null) {
-                                    if (exceptionMsg.contains("email-already-in-use")) {
-                                        errorMessage = "Email này đã được sử dụng";
-                                    } else if (exceptionMsg.contains("weak-password")) {
-                                        errorMessage = "Mật khẩu quá yếu";
-                                    } else if (exceptionMsg.contains("network")) {
-                                        errorMessage = "Lỗi kết nối mạng. Vui lòng thử lại";
-                                    } else {
-                                        errorMessage += ": " + exceptionMsg;
-                                    }
-                                }
-                            }
-                            Toast.makeText(RegisterActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    findViewById(R.id.progress_bar).setVisibility(View.GONE);
-                    findViewById(R.id.btn_register).setEnabled(true);
-                    String msg = "Lỗi đăng ký: " + (e.getMessage() != null ? e.getMessage() : "Vui lòng thử lại");
-                    Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_SHORT).show();
-                });
+            @Override
+            public void onError(String message) {
+                findViewById(R.id.progress_bar).setVisibility(View.GONE);
+                findViewById(R.id.btn_register).setEnabled(true);
+                Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
-

@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.application)
-    id("com.google.gms.google-services")
 }
 
 android {
@@ -44,9 +43,8 @@ dependencies {
     // RecyclerView
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     
-    // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
-    implementation("com.google.firebase:firebase-auth")
+    // OkHttp - API client
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
     
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

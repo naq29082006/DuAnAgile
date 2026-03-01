@@ -1,6 +1,6 @@
-// Cùng server: dùng '' để gọi API cùng origin. Nếu tách frontend ra domain khác thì đổi thành địa chỉ API (vd: 'http://localhost:3000')
+// Tự động chọn BASE_URL: nếu mở từ localhost:3000 thì dùng '' (cùng origin), còn lại dùng http://localhost:3000
 const API_CONFIG = {
-  BASE_URL: '',
+  BASE_URL: (typeof window !== 'undefined' && window.location.port === '3000' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) ? '' : 'http://localhost:3000',
   ENDPOINTS: {
     products: '/api/products',
     productById: (id) => `/api/products/${id}`,

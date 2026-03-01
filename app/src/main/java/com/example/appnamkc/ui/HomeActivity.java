@@ -18,10 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appnamkc.R;
 import com.example.appnamkc.adapter.ProductAdapter;
+import com.example.appnamkc.api.ApiClient;
 import com.example.appnamkc.model.Product;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -71,13 +71,10 @@ public class HomeActivity extends AppCompatActivity implements ProductAdapter.On
     }
 
     private void setupGreeting() {
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser() != null) {
-            String email = mAuth.getCurrentUser().getEmail();
-            if (email != null) {
-                String username = email.split("@")[0];
-                tvGreeting.setText("Xin chào, " + username + "!");
-            }
+        String email = getSharedPreferences("auth", MODE_PRIVATE).getString("email", "");
+        if (email != null && !email.isEmpty()) {
+            String username = email.split("@")[0];
+            tvGreeting.setText("Xin chào, " + username + "!");
         }
     }
 
@@ -184,7 +181,25 @@ public class HomeActivity extends AppCompatActivity implements ProductAdapter.On
     }
 
     private void loadProducts() {
-        // Sample data - replace with actual data source
+        allProducts.clear();
+        // Thử lấy từ API backend (admin), nếu lỗi thì dùng dữ liệu mẫu
+        ApiClient.getProducts(new ApiClient.ApiCallback<ArrayList<ApiClient.ApiProduct>>() {
+            @Override
+            public void onSuccess(ArrayList<ApiClient.ApiProduct> data) {
+                for (ApiClient.ApiProduct p : data) {
+                    allProducts.add(new Product(p.id, p.name, p.description, p.price, p.category, p.imageUrl));
+                }
+                applyFilterAndRefresh();
+            }
+
+            @Override
+            public void onError(String message) {
+                loadProductsFallback();
+            }
+        });
+    }
+
+    private void loadProductsFallback() {
         allProducts.clear();
         allProducts.add(new Product(1, "Burger Gà Giòn", 
                 "Burger gà chiên giòn với sốt đặc biệt", 45000, "Burger", ""));
@@ -202,10 +217,15 @@ public class HomeActivity extends AppCompatActivity implements ProductAdapter.On
                 "Nước ngọt có ga", 20000, "Đồ uống", ""));
         allProducts.add(new Product(8, "Nước Cam Ép", 
                 "Nước cam tươi ép", 35000, "Đồ uống", ""));
+        applyFilterAndRefresh();
+    }
 
-        filteredProducts = new ArrayList<>(allProducts);
-        productAdapter = new ProductAdapter(filteredProducts, this);
-        rvProducts.setAdapter(productAdapter);
+    private void applyFilterAndRefresh() {
+        if (productAdapter == null) {
+            productAdapter = new ProductAdapter(filteredProducts, this);
+            rvProducts.setAdapter(productAdapter);
+        }
+        filterProducts(etSearch != null ? etSearch.getText().toString() : "");
     }
 
     private void filterProducts(String keyword) {
