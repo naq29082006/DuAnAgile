@@ -116,6 +116,95 @@ public class ApiClient {
         });
     }
 
+    /* ========================= ORDERS ========================= */
+
+    public static void getUserOrders(String email, ApiCallback<ArrayList<ApiOrder>> callback) {
+        executor.execute(() -> {
+            try {
+                String url = ApiConfig.BASE_URL + "/api/orders?email=" + email;
+                Request request = new Request.Builder()
+                        .url(url)
+                        .get()
+                        .build();
+
+                Response response = client.newCall(request).execute();
+
+                if (!response.isSuccessful()) {
+                    final String errorMsg = "HTTP " + response.code();
+                    mainHandler.post(() -> callback.onError(errorMsg));
+                    return;
+                }
+
+                String body = response.body() != null ? response.body().string() : "[]";
+                JSONArray arr = new JSONArray(body);
+
+                final ArrayList<ApiOrder> list = new ArrayList<>();
+
+                for (int i = 0; i < arr.length(); i++) {
+                    JSONObject obj = arr.getJSONObject(i);
+                    list.add(new ApiOrder(
+                            obj.optInt("id", 0),
+                            obj.optString("userEmail", ""),
+                            obj.optDouble("totalAmount", 0),
+                            obj.optString("status", ""),
+                            obj.optString("createdAt", "")
+                    ));
+                }
+
+                mainHandler.post(() -> callback.onSuccess(list));
+
+            } catch (Exception e) {
+                final String errorMsg = e.getMessage() != null
+                        ? e.getMessage()
+                        : "Lỗi kết nối";
+                mainHandler.post(() -> callback.onError(errorMsg));
+            }
+        });
+    }
+
+    public static void getAdminOrders(ApiCallback<ArrayList<ApiOrder>> callback) {
+        executor.execute(() -> {
+            try {
+                Request request = new Request.Builder()
+                        .url(ApiConfig.BASE_URL + "/api/admin/orders")
+                        .get()
+                        .build();
+
+                Response response = client.newCall(request).execute();
+
+                if (!response.isSuccessful()) {
+                    final String errorMsg = "HTTP " + response.code();
+                    mainHandler.post(() -> callback.onError(errorMsg));
+                    return;
+                }
+
+                String body = response.body() != null ? response.body().string() : "[]";
+                JSONArray arr = new JSONArray(body);
+
+                final ArrayList<ApiOrder> list = new ArrayList<>();
+
+                for (int i = 0; i < arr.length(); i++) {
+                    JSONObject obj = arr.getJSONObject(i);
+                    list.add(new ApiOrder(
+                            obj.optInt("id", 0),
+                            obj.optString("userEmail", ""),
+                            obj.optDouble("totalAmount", 0),
+                            obj.optString("status", ""),
+                            obj.optString("createdAt", "")
+                    ));
+                }
+
+                mainHandler.post(() -> callback.onSuccess(list));
+
+            } catch (Exception e) {
+                final String errorMsg = e.getMessage() != null
+                        ? e.getMessage()
+                        : "Lỗi kết nối";
+                mainHandler.post(() -> callback.onError(errorMsg));
+            }
+        });
+    }
+
     /* ========================= REGISTER ========================= */
 
     public static void register(String email, String password, ApiCallback<ApiUser> callback) {
@@ -309,6 +398,22 @@ public class ApiClient {
         public ForgotPasswordResult(String message, String password) {
             this.message = message;
             this.password = password;
+        }
+    }
+
+    public static class ApiOrder {
+        public int id;
+        public String userEmail;
+        public double totalAmount;
+        public String status;
+        public String createdAt;
+
+        public ApiOrder(int id, String userEmail, double totalAmount, String status, String createdAt) {
+            this.id = id;
+            this.userEmail = userEmail;
+            this.totalAmount = totalAmount;
+            this.status = status;
+            this.createdAt = createdAt;
         }
     }
 }

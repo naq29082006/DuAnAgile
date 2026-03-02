@@ -67,8 +67,13 @@ public class CategoryActivity extends AppCompatActivity {
         bottomNav.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_product) {
                 startActivity(new Intent(this, ProductActivity.class));
+                finish();
             } else if (item.getItemId() == R.id.nav_trash) {
                 startActivity(new Intent(this, TrashActivity.class));
+                finish();
+            } else if (item.getItemId() == R.id.nav_orders_admin) {
+                startActivity(new Intent(this, AdminOrdersActivity.class));
+                finish();
             }
             return true;
         });

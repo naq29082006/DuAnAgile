@@ -24,6 +24,9 @@ public class TrashActivity extends AppCompatActivity {
             } else if (item.getItemId() == R.id.nav_product) {
                 startActivity(new Intent(this, ProductActivity.class));
                 finish();
+            } else if (item.getItemId() == R.id.nav_orders_admin) {
+                startActivity(new Intent(this, AdminOrdersActivity.class));
+                finish();
             }
             return true;
         });

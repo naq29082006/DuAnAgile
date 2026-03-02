@@ -16,4 +16,9 @@
         android:title="Thùng rác"
         android:icon="@drawable/ic_trash"/>
 
+    <item
+        android:id="@+id/nav_orders_admin"
+        android:title="Đơn hàng"
+        android:icon="@drawable/ic_receipt"/>
+
 </menu>

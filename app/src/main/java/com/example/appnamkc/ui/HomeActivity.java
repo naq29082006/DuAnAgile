@@ -80,8 +80,8 @@ public class HomeActivity extends AppCompatActivity implements ProductAdapter.On
 
     private void setupCart() {
         ivCart.setOnClickListener(v -> {
-            Toast.makeText(this, "Giỏ hàng (" + cartCount + " sản phẩm)", Toast.LENGTH_SHORT).show();
-            // TODO: Navigate to cart activity
+            Intent intent = new Intent(this, CartActivity.class);
+            startActivity(intent);
         });
 
         updateCartBadge();
@@ -170,11 +170,11 @@ public class HomeActivity extends AppCompatActivity implements ProductAdapter.On
                 Toast.makeText(this, "Bán chạy", Toast.LENGTH_SHORT).show();
                 // TODO: Navigate to bestseller
             } else if (item.getItemId() == R.id.nav_orders) {
-                Toast.makeText(this, "Đơn hàng", Toast.LENGTH_SHORT).show();
-                // TODO: Navigate to orders
+                Intent intent = new Intent(this, OrdersActivity.class);
+                startActivity(intent);
             } else if (item.getItemId() == R.id.nav_profile) {
-                Toast.makeText(this, "Tôi", Toast.LENGTH_SHORT).show();
-                // TODO: Navigate to profile
+                Intent intent = new Intent(this, ProfileActivity.class);
+                startActivity(intent);
             }
             return true;
         });

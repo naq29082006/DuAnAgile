@@ -50,6 +50,22 @@
             android:exported="false"
             android:theme="@style/Theme.AppNamKC" />
         <activity
+            android:name=".ui.AdminOrdersActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppNamKC" />
+        <activity
+            android:name=".ui.CartActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppNamKC" />
+        <activity
+            android:name=".ui.OrdersActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppNamKC" />
+        <activity
+            android:name=".ui.ProfileActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppNamKC" />
+        <activity
             android:name=".MainActivity"
             android:exported="false"
             android:theme="@style/Theme.AppNamKC" />
